@@ -1,0 +1,10 @@
+{
+  "Vorspeisen": [
+    { "nr": 1, "gericht": "Beispiel Vorspeise", "preis": 5.50 }
+  ],
+  "Hauptgerichte": [
+    { "nr": 10, "gericht": "Beispiel Hauptgericht", "preis": 12.00 },
+    { "nr": 11, "gericht": "Gericht mit Varianten", "preis": { "klein": 8.00, "groß": 12.00 } }
+  ]
+}
+

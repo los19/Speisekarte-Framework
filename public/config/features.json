@@ -1,0 +1,11 @@
+{
+  "enablePriceVariants": true,
+  "enableSpecialOffers": true,
+  "enableCategoryNavigation": true,
+  "enableWhatsAppOrder": false,
+  "ui": {
+    "cartIcon": "cart",
+    "showHeaderSubtitle": true
+  }
+}
+

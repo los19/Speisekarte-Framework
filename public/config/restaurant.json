@@ -1,0 +1,12 @@
+{
+  "name": "Mein Restaurant",
+  "subtitle": "Beste Küche",
+  "address": "Musterstraße 1, 12345 Musterstadt",
+  "phone": "01234567890",
+  "googleMapsUrl": "https://www.google.com/maps/dir/?api=1&destination=Musterstraße+1,+12345+Musterstadt",
+  "footer": {
+    "tagline": "Frisch zubereitet mit Liebe!"
+  },
+  "cartStorageKey": "restaurant-cart"
+}
+

@@ -1,0 +1,12 @@
+/* Speisekarte Framework - All Styles */
+@import './App.css';
+@import './Header.css';
+@import './MenuCategory.css';
+@import './MenuItem.css';
+@import './CategoryNav.css';
+@import './NotesList.css';
+@import './OpeningHoursModal.css';
+@import './VariantModal.css';
+@import './StatusBadge.css';
+@import './LegalModal.css';
+

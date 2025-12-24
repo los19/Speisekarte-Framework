@@ -1,0 +1,25 @@
+{
+  "colors": {
+    "primary": "#8B4513",
+    "primaryDark": "#6B3410",
+    "primaryLight": "#A0522D",
+    "accent": "#D2691E",
+    "accentLight": "#CD853F",
+    "accentDark": "#5A3D2B",
+    "bgMain": "#F5E6D3",
+    "bgLight": "#FDF8F3",
+    "bgDark": "#E8D4BE",
+    "bgCard": "#FFFAF5",
+    "textDark": "#3D2914",
+    "textMedium": "#5C4033",
+    "textLight": "#8B7355",
+    "borderColor": "#D4C4A8",
+    "borderDark": "#B8A88C",
+    "success": "#4A7C23",
+    "successLight": "#6B9B3A"
+  },
+  "fonts": {
+    "primary": "'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif"
+  }
+}
+

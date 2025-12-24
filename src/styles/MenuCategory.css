@@ -1,0 +1,31 @@
+.menu-category {
+  margin-bottom: 32px;
+}
+
+.category-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--accent);
+  display: inline-block;
+}
+
+.category-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .menu-category {
+    margin-bottom: 24px;
+  }
+
+  .category-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+}
+

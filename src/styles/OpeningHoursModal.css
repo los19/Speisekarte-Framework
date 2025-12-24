@@ -1,0 +1,156 @@
+.hours-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.hours-modal {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s ease-out;
+}
+
+.hours-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  border: none;
+  font-size: 20px;
+  color: var(--text-medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.hours-modal-close:hover {
+  background: var(--border-dark);
+  color: var(--text-dark);
+}
+
+.hours-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.hours-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg-light);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.hours-row.today {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+}
+
+.hours-row.closed {
+  opacity: 0.6;
+}
+
+.hours-row.today.closed {
+  opacity: 1;
+  background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+}
+
+.hours-day {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.hours-time {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.hours-modal-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border-color);
+}
+
+.contact-address {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-medium);
+}
+
+.contact-phone,
+.contact-maps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--bg-light);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.contact-phone:hover,
+.contact-maps:hover {
+  background: var(--primary);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .hours-modal {
+    padding: 20px;
+    margin: 0 16px;
+  }
+
+  .hours-modal-title {
+    font-size: 18px;
+  }
+
+  .hours-row {
+    padding: 8px 12px;
+  }
+
+  .hours-day {
+    font-size: 14px;
+  }
+
+  .hours-time {
+    font-size: 13px;
+  }
+}
+

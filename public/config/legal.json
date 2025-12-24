@@ -1,0 +1,19 @@
+{
+  "imprint": {
+    "companyName": "City Grill Halle",
+    "owner": "Max Mustermann",
+    "address": "Goebenstraße 1",
+    "zipCity": "33790 Halle (Westfalen)",
+    "country": "Deutschland",
+    "phone": "05201 664074",
+    "email": "info@citygrill-halle.de",
+    "taxId": "DE123456789",
+    "tradeRegister": null,
+    "responsibleContent": "Max Mustermann"
+  },
+  "privacy": {
+    "lastUpdated": "24.12.2024",
+    "customSections": []
+  }
+}
+
