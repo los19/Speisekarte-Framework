@@ -1,156 +1,100 @@
 # Speisekarte Framework
 
-Ein konfigurierbares React-Framework für digitale Speisekarten.
+Ein konfigurierbares React-Framework für digitale Restaurant-Speisekarten.
+
+## Installation
+
+```bash
+npm install @los19/speisekarte-framework
+```
 
 ## Features
 
-- **Konfigurierbar**: Alle Restaurant-spezifischen Daten werden über JSON-Dateien konfiguriert
-- **Feature-Flags**: Funktionen können pro Restaurant aktiviert/deaktiviert werden
-- **Themes**: Farben und Design über `theme.json` anpassbar
-- **Updatebar**: Framework-Code kann unabhängig von Konfigurationsdaten aktualisiert werden
+- 🎨 **Vollständig konfigurierbar** - Farben, Logo, Texte über JSON-Dateien
+- 🔄 **Feature-Flags** - Funktionen pro Restaurant aktivieren/deaktivieren
+- 📱 **Responsive** - Optimiert für Mobile, Tablet und Desktop
+- 🛒 **Warenkorb** - Mit LocalStorage-Persistierung und Teilen-Funktion
+- 📞 **Kontakt** - Anrufen, Route planen, WhatsApp-Bestellung
+- ⏰ **Öffnungszeiten** - Live-Status mit Countdown
+- 🏷️ **Sonderangebote** - Tagesangebote mit automatischer Anzeige
 
-## Projektstruktur
+## Verwendung in Restaurant-Projekten
 
-```
-speisekarte-framework/
-├── src/                              # Framework-Code
-│   ├── App.tsx                       # Hauptkomponente
-│   ├── components/                   # React-Komponenten
-│   ├── config/ConfigProvider.tsx     # Konfigurationslogik
-│   ├── hooks/                        # Custom Hooks
-│   ├── styles/                       # CSS-Styles
-│   ├── types/                        # TypeScript-Interfaces
-│   └── utils/                        # Hilfsfunktionen
-├── public/
-│   ├── config/                       # Konfigurationsdateien
-│   │   ├── restaurant.json           # Restaurant-Infos
-│   │   ├── openingHours.json         # Öffnungszeiten
-│   │   ├── features.json             # Feature-Flags
-│   │   ├── theme.json                # Design/Farben
-│   │   └── specialOffers.json        # Sonderangebote
-│   ├── menu.json                     # Speisekarte
-│   └── logo.png                      # Restaurant-Logo
-└── scripts/
-    ├── deploy.sh                     # Deploy-Script
-    └── init-restaurant.sh            # Neues Restaurant erstellen
+```tsx
+// src/main.tsx
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App, ConfigProvider } from '@los19/speisekarte-framework';
+import '@los19/speisekarte-framework/styles';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ConfigProvider>
+      <App />
+    </ConfigProvider>
+  </StrictMode>
+);
 ```
 
 ## Konfigurationsdateien
 
-### restaurant.json
+Lege diese Dateien in `public/config/` ab:
+
+| Datei | Beschreibung |
+|-------|-------------|
+| `restaurant.json` | Name, Adresse, Telefon, WhatsApp |
+| `openingHours.json` | Öffnungszeiten pro Tag |
+| `features.json` | Feature-Flags |
+| `theme.json` | Farben und Design |
+| `specialOffers.json` | Tagesangebote |
+| `legal.json` | Impressum & Datenschutz |
+| `version.json` | Versionsnummer |
+
+Plus:
+- `public/menu.json` - Die Speisekarte
+- `public/logo.png` - Restaurant-Logo
+
+### Beispiel: features.json
 
 ```json
 {
-  "name": "Restaurant Name",
-  "subtitle": "Untertitel",
-  "address": "Straße, PLZ Stadt",
-  "phone": "01234567890",
-  "googleMapsUrl": "https://...",
-  "footer": {
-    "tagline": "Slogan"
-  },
-  "cartStorageKey": "restaurant-cart"
-}
-```
-
-### features.json
-
-```json
-{
-  "enablePriceVariants": true,      // Mehrere Preise pro Produkt (z.B. Pizzagrößen)
-  "enableSpecialOffers": true,      // Sonderangebote/Tagesangebote
-  "enableCategoryNavigation": true, // Navigation zu Kategorien
-  "enableWhatsAppOrder": false,     // WhatsApp-Bestellung (zukünftig)
+  "enablePriceVariants": true,
+  "enableSpecialOffers": true,
+  "enableCategoryNavigation": true,
+  "enableWhatsAppOrder": false,
   "ui": {
-    "cartIcon": "cart",             // "cart" oder "clipboard"
-    "showHeaderSubtitle": true      // Untertitel im Header anzeigen
+    "cartIcon": "cart",
+    "showHeaderSubtitle": true
   }
 }
 ```
 
-### theme.json
-
-```json
-{
-  "colors": {
-    "primary": "#8B4513",
-    "primaryDark": "#6B3410",
-    "primaryLight": "#A0522D",
-    "accent": "#D2691E",
-    "bgMain": "#F5E6D3",
-    "textDark": "#3D2914",
-    ...
-  }
-}
-```
-
-### specialOffers.json
-
-```json
-[
-  {
-    "dayAbbr": "Mo.",
-    "dayIndex": 1,
-    "specialPrice": 6.0,
-    "targetCategory": "Kebab-Spezialitäten",
-    "description": "Kleine Kebab Tasche"
-  }
-]
-```
-
-## Menu-JSON-Format
-
-```json
-{
-  "Kategorie": [
-    {
-      "nr": 1,
-      "gericht": "Gericht Name",
-      "preis": 12.00
-    },
-    {
-      "nr": 2,
-      "gericht": "Gericht mit Varianten",
-      "preis": {
-        "klein": 8.00,
-        "groß": 12.00
-      }
-    }
-  ]
-}
-```
-
-## Verwendung
-
-### Entwicklung
+## Entwicklung
 
 ```bash
+# Klonen
+git clone https://github.com/los19/Speisekarte-Framework.git
+cd Speisekarte-Framework
+
+# Installieren
 npm install
+
+# Lokaler Dev-Server
 npm run dev
+
+# Library bauen
+npm run build:lib
 ```
 
-### Build
+## Veröffentlichung
 
 ```bash
-npm run build
+npm version patch  # oder minor/major
+git push && git push --tags
 ```
 
-### Neues Restaurant erstellen
+GitHub Action veröffentlicht automatisch auf GitHub Packages.
 
-```bash
-./scripts/init-restaurant.sh <zielverzeichnis> "Restaurant Name"
-```
+## Lizenz
 
-### Framework auf bestehendes Restaurant deployen
-
-```bash
-./scripts/deploy.sh <zielverzeichnis>
-```
-
-## Update-Strategie
-
-1. Änderungen am Framework in `speisekarte-framework/src/` machen
-2. `npm run build` ausführen
-3. Mit `deploy.sh` auf alle Restaurants deployen
-
-Die Konfigurationsdateien (`config/`, `menu.json`, `logo.png`) bleiben dabei unverändert.
+MIT
