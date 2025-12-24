@@ -54,6 +54,7 @@ export type {
   OpeningHours,
   FeatureFlags,
   ThemeConfig,
+  HeaderStyle,
   SpecialOffer,
   SpecialOfferConfig,
   VersionInfo,

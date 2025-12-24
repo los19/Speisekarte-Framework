@@ -53,6 +53,13 @@ export interface FeatureFlags {
 }
 
 // Theme Configuration
+export interface HeaderStyle {
+  type: 'gradient' | 'image' | 'solid';
+  image?: string; // Path to header background image (for type 'image')
+  showDots?: boolean; // Show decorative dot pattern
+  showGradientOverlay?: boolean; // Show gradient overlay on top
+}
+
 export interface ThemeConfig {
   colors: {
     primary: string;
@@ -76,6 +83,7 @@ export interface ThemeConfig {
   fonts?: {
     primary?: string;
   };
+  header?: HeaderStyle;
 }
 
 // Special Offers (loaded from config)

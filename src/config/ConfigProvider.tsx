@@ -49,6 +49,15 @@ const defaultTheme: ThemeConfig = {
   },
 };
 
+// Convert hex color to RGB values
+const hexToRgb = (hex: string): string => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (result) {
+    return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
+  }
+  return '139, 69, 19'; // fallback
+};
+
 // Apply theme to CSS variables
 const applyTheme = (theme: ThemeConfig) => {
   const root = document.documentElement;
@@ -71,9 +80,33 @@ const applyTheme = (theme: ThemeConfig) => {
   root.style.setProperty('--success', theme.colors.success);
   root.style.setProperty('--success-light', theme.colors.successLight);
   
+  // RGB values for rgba() usage in overlays
+  root.style.setProperty('--primary-rgb', hexToRgb(theme.colors.primary));
+  root.style.setProperty('--primary-dark-rgb', hexToRgb(theme.colors.primaryDark));
+  
   if (theme.fonts?.primary) {
     root.style.setProperty('--font-primary', theme.fonts.primary);
   }
+  
+  // Header styling
+  const headerStyle = theme.header || { type: 'gradient', showDots: true };
+  
+  // Set header background
+  if (headerStyle.type === 'image' && headerStyle.image) {
+    root.style.setProperty('--header-background', `url('${headerStyle.image}')`);
+    // Enable gradient overlay for image backgrounds
+    root.style.setProperty('--header-overlay-opacity', headerStyle.showGradientOverlay !== false ? '1' : '0');
+  } else if (headerStyle.type === 'solid') {
+    root.style.setProperty('--header-background', theme.colors.primary);
+    root.style.setProperty('--header-overlay-opacity', '0');
+  } else {
+    // Default gradient
+    root.style.setProperty('--header-background', `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.primaryDark} 100%)`);
+    root.style.setProperty('--header-overlay-opacity', '0');
+  }
+  
+  // Show/hide decorative dots
+  root.style.setProperty('--header-dots-opacity', headerStyle.showDots !== false ? '1' : '0');
 };
 
 async function loadJson<T>(path: string): Promise<T | null> {
