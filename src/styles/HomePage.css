@@ -1,0 +1,16 @@
+/* Home Page Styles */
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-content {
+  flex: 1;
+}
+
+.home-content section {
+  scroll-margin-top: 80px;
+}
+

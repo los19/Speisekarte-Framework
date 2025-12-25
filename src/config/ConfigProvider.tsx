@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { AppConfig, MenuData, FeatureFlags, ThemeConfig, RestaurantInfo, OpeningHours, SpecialOffer, VersionInfo, LegalInfo } from '../types/menu';
+import type { AppConfig, MenuData, FeatureFlags, ThemeConfig, RestaurantInfo, OpeningHours, SpecialOffer, VersionInfo, LegalInfo, WebsiteConfig } from '../types/menu';
 
 interface ConfigContextType {
   config: AppConfig | null;
@@ -23,6 +23,9 @@ const defaultFeatures: FeatureFlags = {
   enableCategoryNavigation: true,
   enableWhatsAppOrder: false,
   enableDelivery: false,
+  enableCart: true,
+  enableWebsite: false,
+  websiteMode: 'multiPage',
   ui: {
     cartIcon: 'cart',
     showHeaderSubtitle: true,
@@ -130,7 +133,7 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
     const loadConfig = async () => {
       try {
         // Load all config files in parallel
-        const [restaurant, openingHours, features, theme, specialOffers, versionInfo, legalInfo, menuData] = await Promise.all([
+        const [restaurant, openingHours, features, theme, specialOffers, versionInfo, legalInfo, websiteInfo, menuData] = await Promise.all([
           loadJson<RestaurantInfo>('/config/restaurant.json'),
           loadJson<OpeningHours[]>('/config/openingHours.json'),
           loadJson<FeatureFlags>('/config/features.json'),
@@ -138,6 +141,7 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
           loadJson<SpecialOffer[]>('/config/specialOffers.json'),
           loadJson<VersionInfo>('/config/version.json'),
           loadJson<LegalInfo>('/config/legal.json'),
+          loadJson<WebsiteConfig>('/config/website.json'),
           loadJson<MenuData>('/menu.json'),
         ]);
 
@@ -145,18 +149,22 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
           throw new Error('Restaurant configuration not found');
         }
 
-        if (!menuData) {
+        // Menu data is only required if cart is enabled or website mode is off
+        const mergedFeatures = features ? { ...defaultFeatures, ...features, ui: { ...defaultFeatures.ui, ...features.ui } } : defaultFeatures;
+        
+        if (!menuData && mergedFeatures.enableCart) {
           throw new Error('Menu data not found');
         }
 
         const appConfig: AppConfig = {
           restaurant,
           openingHours: openingHours || [],
-          features: features ? { ...defaultFeatures, ...features, ui: { ...defaultFeatures.ui, ...features.ui } } : defaultFeatures,
+          features: mergedFeatures,
           theme: theme ? { ...defaultTheme, colors: { ...defaultTheme.colors, ...theme.colors } } : defaultTheme,
           specialOffers: specialOffers || [],
           version: versionInfo || { version: 'dev' },
           legal: legalInfo || undefined,
+          website: websiteInfo || undefined,
         };
 
         // Apply theme to CSS
@@ -218,5 +226,10 @@ export const useVersion = (): VersionInfo => {
 export const useLegal = (): LegalInfo | null => {
   const { config } = useConfig();
   return config?.legal || null;
+};
+
+export const useWebsite = (): WebsiteConfig | null => {
+  const { config } = useConfig();
+  return config?.website || null;
 };
 

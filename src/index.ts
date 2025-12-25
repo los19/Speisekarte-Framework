@@ -1,6 +1,10 @@
 // Main App Component
 export { default as App } from './App';
 
+// Pages
+export { MenuPage } from './pages/MenuPage';
+export { HomePage } from './pages/HomePage';
+
 // Components
 export { Header } from './components/Header';
 export { MenuCategory } from './components/MenuCategory';
@@ -12,6 +16,16 @@ export { VariantModal } from './components/VariantModal';
 export { StatusBadge } from './components/StatusBadge';
 export { LegalModal } from './components/LegalModal';
 export { WhatsAppOrderModal } from './components/WhatsAppOrderModal';
+export { WebsiteNav } from './components/WebsiteNav';
+
+// Section Components
+export { HeroSection } from './components/sections/HeroSection';
+export { AboutSection } from './components/sections/AboutSection';
+export { TeamSection } from './components/sections/TeamSection';
+export { GallerySection } from './components/sections/GallerySection';
+export { LocationSection } from './components/sections/LocationSection';
+export { ContactSection } from './components/sections/ContactSection';
+export { MenuSection } from './components/sections/MenuSection';
 
 // Config Provider & Hooks
 export { 
@@ -22,7 +36,8 @@ export {
   useOpeningHours,
   useSpecialOffers,
   useVersion,
-  useLegal
+  useLegal,
+  useWebsite
 } from './config/ConfigProvider';
 
 // Custom Hooks
@@ -65,6 +80,16 @@ export type {
   ImprintInfo,
   PrivacyInfo,
   LegalInfo,
-  AppConfig
+  AppConfig,
+  // Website types
+  WebsiteConfig,
+  WebsiteNavigation,
+  HeroSection as HeroSectionConfig,
+  AboutSection as AboutSectionConfig,
+  TeamSection as TeamSectionConfig,
+  TeamMember,
+  GallerySection as GallerySectionConfig,
+  LocationSection as LocationSectionConfig,
+  ContactSection as ContactSectionConfig
 } from './types/menu';
 

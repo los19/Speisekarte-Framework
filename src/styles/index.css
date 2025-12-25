@@ -11,3 +11,15 @@
 @import './LegalModal.css';
 @import './WhatsAppOrderModal.css';
 
+/* Website/Homepage Styles */
+@import './MenuPage.css';
+@import './HomePage.css';
+@import './WebsiteNav.css';
+@import './sections/HeroSection.css';
+@import './sections/AboutSection.css';
+@import './sections/TeamSection.css';
+@import './sections/GallerySection.css';
+@import './sections/LocationSection.css';
+@import './sections/ContactSection.css';
+@import './sections/MenuSection.css';
+

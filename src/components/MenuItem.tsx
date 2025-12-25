@@ -7,10 +7,11 @@ interface MenuItemProps {
   item: MenuItemType;
   category: string;
   quantity: number;
-  onIncrease: () => void;
-  onDecrease: () => void;
-  onSelectVariant: (category: string, item: MenuItemType) => void;
+  onIncrease?: () => void;
+  onDecrease?: () => void;
+  onSelectVariant?: (category: string, item: MenuItemType) => void;
   onNavigateToCategory?: (category: string) => void;
+  hideQuantityControls?: boolean;
 }
 
 // Day abbreviations mapping to full names and colors
@@ -75,7 +76,8 @@ export const MenuItem = ({
   onIncrease, 
   onDecrease, 
   onSelectVariant,
-  onNavigateToCategory 
+  onNavigateToCategory,
+  hideQuantityControls 
 }: MenuItemProps) => {
   const features = useFeatures();
   const specialOffers = useSpecialOffers();
@@ -103,10 +105,12 @@ export const MenuItem = ({
       return;
     }
     
-    if (itemHasVariants && !hasSpecialPrice) {
+    if (hideQuantityControls) return;
+    
+    if (itemHasVariants && !hasSpecialPrice && onSelectVariant) {
       onSelectVariant(category, item);
     } else {
-      onIncrease();
+      onIncrease?.();
     }
   };
 
@@ -177,13 +181,13 @@ export const MenuItem = ({
             >
               →
             </button>
-          ) : (
+          ) : !hideQuantityControls ? (
             <div className="menu-item-controls">
               {quantity > 0 && (
                 <>
                   <button 
                     className="quantity-btn decrease" 
-                    onClick={(e) => { e.stopPropagation(); onDecrease(); }}
+                    onClick={(e) => { e.stopPropagation(); onDecrease?.(); }}
                   >
                     −
                   </button>
@@ -197,7 +201,7 @@ export const MenuItem = ({
                 +
               </button>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

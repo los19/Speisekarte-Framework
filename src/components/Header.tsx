@@ -7,8 +7,8 @@ interface HeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onOpenHoursClick: () => void;
-  selectedCount: number;
-  onNotesClick: () => void;
+  selectedCount?: number;
+  onNotesClick?: () => void;
 }
 
 export const Header = ({ 
@@ -77,15 +77,17 @@ export const Header = ({
               </button>
             )}
           </div>
-          <button 
-            className="notes-badge" 
-            onClick={onNotesClick}
-            type="button"
-            aria-label="Warenkorb öffnen"
-          >
-            <span className="notes-icon">{cartIcon}</span>
-            <span className="notes-count">{selectedCount || 0}</span>
-          </button>
+          {onNotesClick && (
+            <button 
+              className="notes-badge" 
+              onClick={onNotesClick}
+              type="button"
+              aria-label="Warenkorb öffnen"
+            >
+              <span className="notes-icon">{cartIcon}</span>
+              <span className="notes-count">{selectedCount || 0}</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

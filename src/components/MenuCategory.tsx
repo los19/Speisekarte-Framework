@@ -12,6 +12,7 @@ interface MenuCategoryProps {
   onNavigateToCategory?: (category: string) => void;
   categoryIndex: number;
   categoryRef?: (el: HTMLDivElement | null) => void;
+  hideQuantityControls?: boolean;
 }
 
 // Create a unique key for each menu item
@@ -45,6 +46,7 @@ export const MenuCategory = ({
   onNavigateToCategory,
   categoryIndex,
   categoryRef,
+  hideQuantityControls,
 }: MenuCategoryProps) => {
   const features = useFeatures();
   
@@ -53,7 +55,7 @@ export const MenuCategory = ({
       <h2 className="category-title">{category}</h2>
       <div className="category-items">
         {items.map((item, itemIndex) => {
-          const quantity = getItemQuantity(category, item, selectedItems);
+          const quantity = hideQuantityControls ? 0 : getItemQuantity(category, item, selectedItems);
           
           return (
             <MenuItem
@@ -61,10 +63,11 @@ export const MenuCategory = ({
               item={item}
               category={category}
               quantity={quantity}
-              onIncrease={() => onUpdateQuantity(categoryIndex, itemIndex, 1)}
-              onDecrease={() => onUpdateQuantity(categoryIndex, itemIndex, -1)}
-              onSelectVariant={onSelectVariant}
+              onIncrease={hideQuantityControls ? undefined : () => onUpdateQuantity(categoryIndex, itemIndex, 1)}
+              onDecrease={hideQuantityControls ? undefined : () => onUpdateQuantity(categoryIndex, itemIndex, -1)}
+              onSelectVariant={hideQuantityControls ? undefined : onSelectVariant}
               onNavigateToCategory={features.enableCategoryNavigation ? onNavigateToCategory : undefined}
+              hideQuantityControls={hideQuantityControls}
             />
           );
         })}
