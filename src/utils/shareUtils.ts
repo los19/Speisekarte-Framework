@@ -94,6 +94,7 @@ interface SelectedItemData {
   };
   quantity: number;
   selectedVariant?: string;
+  notes?: string; // Special requests for this item
 }
 
 /**
@@ -151,10 +152,15 @@ export const generateWhatsAppMessageWithDetails = (
   
   // Items
   let total = 0;
-  items.forEach(({ item, quantity, selectedVariant }) => {
+  items.forEach(({ item, quantity, selectedVariant, notes }) => {
     const numberPart = item.nr ? `#${item.nr} ` : '';
     const variantPart = selectedVariant ? ` (${selectedVariant})` : '';
     lines.push(`• ${quantity}x ${numberPart}${item.gericht}${variantPart}`);
+    
+    // Add special notes for this item
+    if (notes) {
+      lines.push(`   ↳ ${notes}`);
+    }
     
     // Calculate price
     if (item.preis !== null && item.preis !== undefined) {

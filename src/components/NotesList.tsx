@@ -13,12 +13,14 @@ interface NotesListProps {
     quantity: number; 
     variant?: string;
     variantPrice?: number;
+    notes?: string;
   }>;
   selectedItemsRaw: { [key: string]: number };
   onClearAll: () => void;
   onRemoveItem: (key: string) => void;
   onUpdateQuantity: (key: string, change: number) => void;
-  onWhatsAppOrder?: () => void; // Callback to open WhatsApp order modal
+  onUpdateNotes?: (key: string, notes: string) => void;
+  onWhatsAppOrder?: () => void;
 }
 
 export const NotesList = ({
@@ -29,9 +31,11 @@ export const NotesList = ({
   onClearAll,
   onRemoveItem,
   onUpdateQuantity,
+  onUpdateNotes,
   onWhatsAppOrder,
 }: NotesListProps) => {
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'error'>('idle');
+  const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
   const restaurant = useRestaurant();
   const features = useFeatures();
 
@@ -61,7 +65,6 @@ export const NotesList = ({
     }
   };
   
-  // Check if WhatsApp ordering is available
   const isWhatsAppAvailable = features.enableWhatsAppOrder && !!restaurant?.whatsappNumber;
 
   const handleCall = () => {
@@ -74,12 +77,22 @@ export const NotesList = ({
     window.open(restaurant.googleMapsUrl, '_blank');
   };
 
-  // Calculate total
+  const toggleNotesExpanded = (key: string) => {
+    setExpandedNotes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(key)) {
+        newSet.delete(key);
+      } else {
+        newSet.add(key);
+      }
+      return newSet;
+    });
+  };
+
   const getItemPrice = (item: MenuItem, variantPrice?: number): number => {
     if (variantPrice !== undefined) return variantPrice;
     if (typeof item.preis === 'number') return item.preis;
     if (item.preis === null) return 0;
-    // For variants without specific price, use lowest
     return Math.min(...Object.values(item.preis));
   };
 
@@ -105,7 +118,7 @@ export const NotesList = ({
             </div>
           ) : (
             <div className="notes-items">
-              {Array.from(selectedItems.entries()).map(([key, { item, quantity, variant, variantPrice }]) => (
+              {Array.from(selectedItems.entries()).map(([key, { item, quantity, variant, variantPrice, notes }]) => (
                 <div key={key} className="notes-item">
                   <div className="notes-item-info">
                     <div className="notes-item-name">
@@ -117,6 +130,7 @@ export const NotesList = ({
                       {(getItemPrice(item, variantPrice) * quantity).toFixed(2)} €
                     </div>
                   </div>
+                  
                   <div className="notes-item-controls">
                     <button 
                       className="notes-qty-btn"
@@ -132,12 +146,39 @@ export const NotesList = ({
                       +
                     </button>
                     <button 
+                      className={`notes-special-btn ${notes ? 'has-notes' : ''}`}
+                      onClick={() => toggleNotesExpanded(key)}
+                      title="Sonderwunsch hinzufügen"
+                    >
+                      ✏️
+                    </button>
+                    <button 
                       className="notes-remove-btn"
                       onClick={() => onRemoveItem(key)}
                     >
                       🗑️
                     </button>
                   </div>
+
+                  {/* Expandable notes input */}
+                  {(expandedNotes.has(key) || notes) && (
+                    <div className="notes-item-special">
+                      <input
+                        type="text"
+                        placeholder="Sonderwunsch, z.B. ohne Zwiebeln..."
+                        value={notes || ''}
+                        onChange={(e) => onUpdateNotes?.(key, e.target.value)}
+                        className="notes-special-input"
+                      />
+                    </div>
+                  )}
+
+                  {/* Show notes preview if collapsed but has notes */}
+                  {notes && !expandedNotes.has(key) && (
+                    <div className="notes-item-special-preview" onClick={() => toggleNotesExpanded(key)}>
+                      <span className="notes-special-label">✏️ {notes}</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -155,7 +196,6 @@ export const NotesList = ({
               Diese Übersicht dient nur zur Orientierung und stellt kein verbindliches Angebot dar.
             </p>
             
-            {/* Contact Actions */}
             <div className="notes-contact-actions">
               {restaurant?.phone && (
                 <a 

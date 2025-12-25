@@ -17,6 +17,10 @@ interface SelectedItemsMap {
   [key: string]: number;
 }
 
+interface ItemNotesMap {
+  [key: string]: string;
+}
+
 interface PendingVariantSelection {
   category: string;
   item: MenuItem;
@@ -32,6 +36,10 @@ function AppContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useLocalStorage<SelectedItemsMap>(
     restaurant?.cartStorageKey || 'menu-cart', 
+    {}
+  );
+  const [itemNotes, setItemNotes] = useLocalStorage<ItemNotesMap>(
+    (restaurant?.cartStorageKey || 'menu-cart') + '-notes',
     {}
   );
   const [isNotesOpen, setIsNotesOpen] = useState(false);
@@ -165,7 +173,7 @@ function AppContent() {
   };
 
   const selectedItemsMap = useMemo(() => {
-    const map = new Map<string, { category: string; item: MenuItem; quantity: number; variant?: string; variantPrice?: number }>();
+    const map = new Map<string, { category: string; item: MenuItem; quantity: number; variant?: string; variantPrice?: number; notes?: string }>();
     
     if (!typedMenuData) return map;
     
@@ -191,22 +199,24 @@ function AppContent() {
             variantPrice = (item.preis as PriceVariants)[variant];
           }
           
-          map.set(key, { category, item, quantity, variant, variantPrice });
+          const notes = itemNotes[key] || undefined;
+          map.set(key, { category, item, quantity, variant, variantPrice, notes });
         }
       }
     });
     
     return map;
-  }, [selectedItems, typedMenuData, features.enableSpecialOffers, specialOffers]);
+  }, [selectedItems, typedMenuData, features.enableSpecialOffers, specialOffers, itemNotes]);
 
   // Convert to the format expected by WhatsAppOrderModal
   const whatsAppItemsMap = useMemo(() => {
-    const map = new Map<string, { item: MenuItem; quantity: number; selectedVariant?: string }>();
+    const map = new Map<string, { item: MenuItem; quantity: number; selectedVariant?: string; notes?: string }>();
     selectedItemsMap.forEach((value, key) => {
       map.set(key, {
         item: value.item,
         quantity: value.quantity,
         selectedVariant: value.variant,
+        notes: value.notes,
       });
     });
     return map;
@@ -217,6 +227,23 @@ function AppContent() {
       const newItems = { ...prev };
       delete newItems[key];
       return newItems;
+    });
+    // Also remove notes for this item
+    setItemNotes(prev => {
+      const newNotes = { ...prev };
+      delete newNotes[key];
+      return newNotes;
+    });
+  };
+
+  const handleUpdateItemNotes = (key: string, notes: string) => {
+    setItemNotes(prev => {
+      if (notes.trim() === '') {
+        const newNotes = { ...prev };
+        delete newNotes[key];
+        return newNotes;
+      }
+      return { ...prev, [key]: notes };
     });
   };
 
@@ -238,6 +265,7 @@ function AppContent() {
   const handleClearAll = () => {
     if (window.confirm('Möchtest du wirklich alle ausgewählten Gerichte löschen?')) {
       setSelectedItems({});
+      setItemNotes({});
       setIsNotesOpen(false);
     }
   };
@@ -360,6 +388,7 @@ function AppContent() {
         onClearAll={handleClearAll}
         onRemoveItem={handleRemoveItem}
         onUpdateQuantity={handleUpdateItemQuantity}
+        onUpdateNotes={handleUpdateItemNotes}
         onWhatsAppOrder={() => {
           setIsNotesOpen(false);
           setIsWhatsAppModalOpen(true);

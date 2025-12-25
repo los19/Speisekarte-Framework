@@ -7,7 +7,7 @@ import '../styles/WhatsAppOrderModal.css';
 interface WhatsAppOrderModalProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedItems: Map<string, { item: MenuItem; quantity: number; selectedVariant?: string }>;
+  selectedItems: Map<string, { item: MenuItem; quantity: number; selectedVariant?: string; notes?: string }>;
 }
 
 export const WhatsAppOrderModal = ({ isOpen, onClose, selectedItems }: WhatsAppOrderModalProps) => {
@@ -121,13 +121,18 @@ export const WhatsAppOrderModal = ({ isOpen, onClose, selectedItems }: WhatsAppO
           <div className="whatsapp-order-summary">
             <h4>Ihre Bestellung</h4>
             <div className="whatsapp-order-items">
-              {Array.from(selectedItems.entries()).map(([key, { item, quantity, selectedVariant }]) => (
+              {Array.from(selectedItems.entries()).map(([key, { item, quantity, selectedVariant, notes: itemNotes }]) => (
                 <div key={key} className="whatsapp-order-item">
-                  <span className="item-qty">{quantity}x</span>
-                  <span className="item-name">
-                    {item.nr && `#${item.nr} `}{item.gericht}
-                    {selectedVariant && <span className="item-variant"> ({selectedVariant})</span>}
-                  </span>
+                  <div className="item-main">
+                    <span className="item-qty">{quantity}x</span>
+                    <span className="item-name">
+                      {item.nr && `#${item.nr} `}{item.gericht}
+                      {selectedVariant && <span className="item-variant"> ({selectedVariant})</span>}
+                    </span>
+                  </div>
+                  {itemNotes && (
+                    <div className="item-notes">✏️ {itemNotes}</div>
+                  )}
                 </div>
               ))}
             </div>
