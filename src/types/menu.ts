@@ -46,6 +46,7 @@ export interface FeatureFlags {
   enableSpecialOffers: boolean;
   enableCategoryNavigation: boolean;
   enableWhatsAppOrder: boolean;
+  enableDelivery: boolean; // If true, delivery option is available and address will be requested
   ui: {
     cartIcon: 'cart' | 'clipboard';
     showHeaderSubtitle: boolean;

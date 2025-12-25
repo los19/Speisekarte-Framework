@@ -6,6 +6,7 @@ import { NotesList } from './components/NotesList';
 import { OpeningHoursModal } from './components/OpeningHoursModal';
 import { VariantModal } from './components/VariantModal';
 import { LegalModal } from './components/LegalModal';
+import { WhatsAppOrderModal } from './components/WhatsAppOrderModal';
 import { useConfig, useFeatures, useRestaurant, useSpecialOffers, useVersion } from './config/ConfigProvider';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { getSpecialPriceForItem } from './utils/specialOffers';
@@ -38,6 +39,7 @@ function AppContent() {
   const [pendingVariant, setPendingVariant] = useState<PendingVariantSelection | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [legalModalType, setLegalModalType] = useState<'imprint' | 'privacy' | null>(null);
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
   
   const categoryRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -197,6 +199,19 @@ function AppContent() {
     return map;
   }, [selectedItems, typedMenuData, features.enableSpecialOffers, specialOffers]);
 
+  // Convert to the format expected by WhatsAppOrderModal
+  const whatsAppItemsMap = useMemo(() => {
+    const map = new Map<string, { item: MenuItem; quantity: number; selectedVariant?: string }>();
+    selectedItemsMap.forEach((value, key) => {
+      map.set(key, {
+        item: value.item,
+        quantity: value.quantity,
+        selectedVariant: value.variant,
+      });
+    });
+    return map;
+  }, [selectedItemsMap]);
+
   const handleRemoveItem = (key: string) => {
     setSelectedItems(prev => {
       const newItems = { ...prev };
@@ -345,6 +360,10 @@ function AppContent() {
         onClearAll={handleClearAll}
         onRemoveItem={handleRemoveItem}
         onUpdateQuantity={handleUpdateItemQuantity}
+        onWhatsAppOrder={() => {
+          setIsNotesOpen(false);
+          setIsWhatsAppModalOpen(true);
+        }}
       />
 
       <OpeningHoursModal
@@ -388,6 +407,14 @@ function AppContent() {
         onClose={() => setLegalModalType(null)}
         type={legalModalType || 'imprint'}
       />
+
+      {features.enableWhatsAppOrder && (
+        <WhatsAppOrderModal
+          isOpen={isWhatsAppModalOpen}
+          onClose={() => setIsWhatsAppModalOpen(false)}
+          selectedItems={whatsAppItemsMap}
+        />
+      )}
     </div>
   );
 }

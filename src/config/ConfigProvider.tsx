@@ -22,6 +22,7 @@ const defaultFeatures: FeatureFlags = {
   enableSpecialOffers: false,
   enableCategoryNavigation: true,
   enableWhatsAppOrder: false,
+  enableDelivery: false,
   ui: {
     cartIcon: 'cart',
     showHeaderSubtitle: true,

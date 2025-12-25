@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRestaurant, useFeatures } from '../config/ConfigProvider';
-import { generateShareUrl, shareViaNavigator, copyToClipboard, openWhatsAppOrder } from '../utils/shareUtils';
+import { generateShareUrl, shareViaNavigator, copyToClipboard } from '../utils/shareUtils';
 import type { MenuItem } from '../types/menu';
 import '../styles/NotesList.css';
 
@@ -18,6 +18,7 @@ interface NotesListProps {
   onClearAll: () => void;
   onRemoveItem: (key: string) => void;
   onUpdateQuantity: (key: string, change: number) => void;
+  onWhatsAppOrder?: () => void; // Callback to open WhatsApp order modal
 }
 
 export const NotesList = ({
@@ -28,6 +29,7 @@ export const NotesList = ({
   onClearAll,
   onRemoveItem,
   onUpdateQuantity,
+  onWhatsAppOrder,
 }: NotesListProps) => {
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'error'>('idle');
   const restaurant = useRestaurant();
@@ -54,8 +56,9 @@ export const NotesList = ({
   };
 
   const handleWhatsAppOrder = () => {
-    if (!restaurant?.whatsappNumber) return;
-    openWhatsAppOrder(selectedItems, restaurant.name, restaurant.whatsappNumber);
+    if (onWhatsAppOrder) {
+      onWhatsAppOrder();
+    }
   };
   
   // Check if WhatsApp ordering is available

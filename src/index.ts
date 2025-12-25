@@ -11,6 +11,7 @@ export { OpeningHoursModal } from './components/OpeningHoursModal';
 export { VariantModal } from './components/VariantModal';
 export { StatusBadge } from './components/StatusBadge';
 export { LegalModal } from './components/LegalModal';
+export { WhatsAppOrderModal } from './components/WhatsAppOrderModal';
 
 // Config Provider & Hooks
 export { 
@@ -42,7 +43,10 @@ export {
   shareViaNavigator, 
   copyToClipboard,
   generateWhatsAppMessage,
-  generateWhatsAppUrl
+  generateWhatsAppMessageWithDetails,
+  generateWhatsAppUrl,
+  isWhatsAppLikelyAvailable,
+  openWhatsAppOrder
 } from './utils/shareUtils';
 
 // Types

@@ -68,14 +68,36 @@ interface CartItem {
   item: { 
     gericht: string; 
     nr?: number | string | null;
+    preis?: number | { [key: string]: number } | null;
   };
   quantity: number;
   variant?: string;
   variantPrice?: number;
 }
 
+// For the new WhatsApp Order Modal
+interface OrderDetails {
+  name: string;
+  orderType: 'pickup' | 'delivery';
+  address?: {
+    street: string;
+    zipCity: string;
+  };
+  notes?: string;
+}
+
+interface SelectedItemData {
+  item: {
+    gericht: string;
+    nr?: number | string | null;
+    preis?: number | { [key: string]: number } | null;
+  };
+  quantity: number;
+  selectedVariant?: string;
+}
+
 /**
- * Generates a formatted WhatsApp message for ordering
+ * Generates a formatted WhatsApp message for ordering (simple version)
  */
 export const generateWhatsAppMessage = (
   items: Map<string, CartItem>,
@@ -104,11 +126,82 @@ export const generateWhatsAppMessage = (
 };
 
 /**
- * Generates a WhatsApp URL with the order message
- * @param whatsappNumber - Phone number in E.164 format without + (e.g., "491701234567")
- * @param message - The message to send (will be URL encoded)
+ * Generates a formatted WhatsApp message with order details (extended version)
  */
-export const generateWhatsAppUrl = (whatsappNumber: string, message: string): string => {
+export const generateWhatsAppMessageWithDetails = (
+  items: Map<string, SelectedItemData>,
+  restaurantName: string,
+  orderDetails: OrderDetails
+): string => {
+  const lines: string[] = [];
+  
+  // Header
+  lines.push(`Hallo ${restaurantName},`);
+  lines.push('');
+  lines.push('ich möchte folgende Bestellung aufgeben:');
+  lines.push('');
+  
+  // Order type
+  if (orderDetails.orderType === 'delivery') {
+    lines.push('🚗 *LIEFERUNG*');
+  } else {
+    lines.push('🏃 *ABHOLUNG*');
+  }
+  lines.push('');
+  
+  // Items
+  let total = 0;
+  items.forEach(({ item, quantity, selectedVariant }) => {
+    const numberPart = item.nr ? `#${item.nr} ` : '';
+    const variantPart = selectedVariant ? ` (${selectedVariant})` : '';
+    lines.push(`• ${quantity}x ${numberPart}${item.gericht}${variantPart}`);
+    
+    // Calculate price
+    if (item.preis !== null && item.preis !== undefined) {
+      let price: number;
+      if (typeof item.preis === 'number') {
+        price = item.preis;
+      } else if (selectedVariant && item.preis[selectedVariant]) {
+        price = item.preis[selectedVariant];
+      } else {
+        price = Object.values(item.preis)[0] || 0;
+      }
+      total += price * quantity;
+    }
+  });
+  
+  lines.push('');
+  lines.push(`Voraussichtlicher Preis: ${total.toFixed(2)} €`);
+  lines.push('');
+  
+  // Customer info
+  lines.push(`Name: ${orderDetails.name}`);
+  
+  // Delivery address
+  if (orderDetails.orderType === 'delivery' && orderDetails.address) {
+    lines.push('');
+    lines.push('Lieferadresse:');
+    lines.push(orderDetails.address.street);
+    lines.push(orderDetails.address.zipCity);
+  }
+  
+  // Additional notes
+  if (orderDetails.notes) {
+    lines.push('');
+    lines.push(`Anmerkungen: ${orderDetails.notes}`);
+  }
+  
+  // Footer
+  lines.push('');
+  lines.push('Vielen Dank!');
+  
+  return lines.join('\n');
+};
+
+/**
+ * Cleans a phone number to E.164 format
+ */
+const cleanPhoneNumber = (whatsappNumber: string): string => {
   // Clean the number - remove all non-numeric characters
   let cleanNumber = whatsappNumber.replace(/\D/g, '');
   
@@ -122,26 +215,58 @@ export const generateWhatsAppUrl = (whatsappNumber: string, message: string): st
     cleanNumber = '49' + cleanNumber;
   }
   
-  return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+  return cleanNumber;
 };
+
+/**
+ * Generates a WhatsApp URL with the order message (simple version)
+ * @param whatsappNumber - Phone number in E.164 format without + (e.g., "491701234567")
+ * @param message - The message to send (will be URL encoded)
+ */
+export function generateWhatsAppUrl(whatsappNumber: string, message: string): string;
+
+/**
+ * Generates a WhatsApp URL with order details (extended version)
+ */
+export function generateWhatsAppUrl(
+  whatsappNumber: string,
+  restaurantName: string,
+  items: Map<string, SelectedItemData>,
+  orderDetails: OrderDetails
+): string;
+
+export function generateWhatsAppUrl(
+  whatsappNumber: string,
+  messageOrRestaurantName: string,
+  items?: Map<string, SelectedItemData>,
+  orderDetails?: OrderDetails
+): string {
+  const cleanNumber = cleanPhoneNumber(whatsappNumber);
+  
+  let message: string;
+  if (items && orderDetails) {
+    // Extended version with order details
+    message = generateWhatsAppMessageWithDetails(items, messageOrRestaurantName, orderDetails);
+  } else {
+    // Simple version - messageOrRestaurantName is the message
+    message = messageOrRestaurantName;
+  }
+  
+  return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+}
 
 /**
  * Check if WhatsApp is likely available
  * Note: This is a heuristic, not 100% reliable
  */
 export const isWhatsAppLikelyAvailable = (): boolean => {
-  // On mobile devices, WhatsApp is likely available
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
-  
   // On desktop, WhatsApp Web is always accessible
   // So we return true for all devices
   return true;
 };
 
 /**
- * Opens WhatsApp with the order
+ * Opens WhatsApp with the order (simple version)
  */
 export const openWhatsAppOrder = (
   items: Map<string, CartItem>,
