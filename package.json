@@ -1,6 +1,6 @@
 {
   "name": "@los19/speisekarte-framework",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "type": "module",
   "description": "Framework für Restaurant-Speisekarten",
   "main": "./dist/index.js",

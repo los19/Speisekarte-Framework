@@ -117,76 +117,75 @@ export const NotesList = ({
               <p className="notes-empty-hint">Tippe auf + um Gerichte hinzuzufügen</p>
             </div>
           ) : (
-            <div className="notes-items">
-              {Array.from(selectedItems.entries()).map(([key, { item, quantity, variant, variantPrice, notes }]) => (
-                <div key={key} className="notes-item">
-                  <div className="notes-item-info">
-                    <div className="notes-item-name">
-                      {item.nr && <span className="notes-item-nr">Nr. {item.nr}</span>}
-                      {item.gericht}
-                      {variant && <span className="notes-item-variant">({variant})</span>}
+            <>
+              <div className="notes-items">
+                {Array.from(selectedItems.entries()).map(([key, { item, quantity, variant, variantPrice, notes }]) => (
+                  <div key={key} className="notes-item">
+                    <div className="notes-item-info">
+                      <div className="notes-item-name">
+                        {item.nr && <span className="notes-item-nr">Nr. {item.nr}</span>}
+                        {item.gericht}
+                        {variant && <span className="notes-item-variant">({variant})</span>}
+                      </div>
+                      <div className="notes-item-price">
+                        {(getItemPrice(item, variantPrice) * quantity).toFixed(2)} €
+                      </div>
                     </div>
-                    <div className="notes-item-price">
-                      {(getItemPrice(item, variantPrice) * quantity).toFixed(2)} €
+                    
+                    <div className="notes-item-controls">
+                      <button 
+                        className="notes-qty-btn"
+                        onClick={() => onUpdateQuantity(key, -1)}
+                      >
+                        −
+                      </button>
+                      <span className="notes-qty">{quantity}</span>
+                      <button 
+                        className="notes-qty-btn"
+                        onClick={() => onUpdateQuantity(key, 1)}
+                      >
+                        +
+                      </button>
+                      <button 
+                        className={`notes-special-btn ${notes ? 'has-notes' : ''}`}
+                        onClick={() => toggleNotesExpanded(key)}
+                        title="Sonderwunsch hinzufügen"
+                      >
+                        ✏️
+                      </button>
+                      <button 
+                        className="notes-remove-btn"
+                        onClick={() => onRemoveItem(key)}
+                      >
+                        🗑️
+                      </button>
                     </div>
+
+                    {/* Expandable notes input */}
+                    {(expandedNotes.has(key) || notes) && (
+                      <div className="notes-item-special">
+                        <input
+                          type="text"
+                          placeholder="Sonderwunsch, z.B. ohne Zwiebeln..."
+                          value={notes || ''}
+                          onChange={(e) => onUpdateNotes?.(key, e.target.value)}
+                          className="notes-special-input"
+                        />
+                      </div>
+                    )}
+
+                    {/* Show notes preview if collapsed but has notes */}
+                    {notes && !expandedNotes.has(key) && (
+                      <div className="notes-item-special-preview" onClick={() => toggleNotesExpanded(key)}>
+                        <span className="notes-special-label">✏️ {notes}</span>
+                      </div>
+                    )}
                   </div>
-                  
-                  <div className="notes-item-controls">
-                    <button 
-                      className="notes-qty-btn"
-                      onClick={() => onUpdateQuantity(key, -1)}
-                    >
-                      −
-                    </button>
-                    <span className="notes-qty">{quantity}</span>
-                    <button 
-                      className="notes-qty-btn"
-                      onClick={() => onUpdateQuantity(key, 1)}
-                    >
-                      +
-                    </button>
-                    <button 
-                      className={`notes-special-btn ${notes ? 'has-notes' : ''}`}
-                      onClick={() => toggleNotesExpanded(key)}
-                      title="Sonderwunsch hinzufügen"
-                    >
-                      ✏️
-                    </button>
-                    <button 
-                      className="notes-remove-btn"
-                      onClick={() => onRemoveItem(key)}
-                    >
-                      🗑️
-                    </button>
-                  </div>
+                ))}
+              </div>
 
-                  {/* Expandable notes input */}
-                  {(expandedNotes.has(key) || notes) && (
-                    <div className="notes-item-special">
-                      <input
-                        type="text"
-                        placeholder="Sonderwunsch, z.B. ohne Zwiebeln..."
-                        value={notes || ''}
-                        onChange={(e) => onUpdateNotes?.(key, e.target.value)}
-                        className="notes-special-input"
-                      />
-                    </div>
-                  )}
-
-                  {/* Show notes preview if collapsed but has notes */}
-                  {notes && !expandedNotes.has(key) && (
-                    <div className="notes-item-special-preview" onClick={() => toggleNotesExpanded(key)}>
-                      <span className="notes-special-label">✏️ {notes}</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {selectedItems.size > 0 && (
-          <div className="notes-footer">
+              {/* Footer now inside scrollable content */}
+              <div className="notes-footer-inline">
             <div className="notes-total">
               <span>Voraussichtlicher Preis:</span>
               <span className="notes-total-price">{total.toFixed(2)} €</span>
@@ -231,13 +230,15 @@ export const NotesList = ({
             </div>
             
             {isWhatsAppAvailable && (
-              <p className="notes-whatsapp-hint">
-                Die Bestellung wird über WhatsApp direkt an das Restaurant gesendet. 
-                Vertragspartner ist ausschließlich das Restaurant.
-              </p>
-            )}
-          </div>
-        )}
+                <p className="notes-whatsapp-hint">
+                  Die Bestellung wird über WhatsApp direkt an das Restaurant gesendet. 
+                  Vertragspartner ist ausschließlich das Restaurant.
+                </p>
+              )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

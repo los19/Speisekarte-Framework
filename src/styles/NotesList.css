@@ -20,6 +20,7 @@
   flex-direction: column;
   animation: slideInRight 0.3s ease-out;
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 @keyframes slideInRight {
@@ -67,7 +68,9 @@
 .notes-content {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 16px;
+  min-height: 0; /* Critical for flex scrolling */
 }
 
 .notes-empty {
@@ -273,6 +276,13 @@
 .notes-footer {
   padding: 16px;
   background: var(--bg-light);
+  border-top: 2px solid var(--border-color);
+}
+
+/* Inline footer - scrolls with content */
+.notes-footer-inline {
+  padding: 16px 0;
+  margin-top: 16px;
   border-top: 2px solid var(--border-color);
 }
 
