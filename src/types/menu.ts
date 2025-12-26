@@ -192,6 +192,7 @@ export interface ContactSection {
   showPhone: boolean;
   showEmail: boolean;
   showAddress: boolean;
+  showRoute?: boolean; // Show "Route planen" tile with Google Maps link
 }
 
 export interface WebsiteNavigation {

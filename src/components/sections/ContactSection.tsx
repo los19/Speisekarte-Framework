@@ -64,8 +64,15 @@ export function ContactSection({ config, restaurant }: ContactSectionProps) {
     window.location.href = `mailto:${email}`;
   };
 
+  const handleRoute = () => {
+    if (restaurant?.googleMapsUrl) {
+      window.open(restaurant.googleMapsUrl, '_blank');
+    }
+  };
+
   const showForm = config.showForm && config.formEndpoint;
   const email = config.email || restaurant?.email || 'info@restaurant.de';
+  const showRoute = config.showRoute !== false && restaurant?.googleMapsUrl;
 
   return (
     <div className="contact-section">
@@ -96,6 +103,14 @@ export function ContactSection({ config, restaurant }: ContactSectionProps) {
                 <span className="contact-icon">✉️</span>
                 <strong>E-Mail</strong>
                 <p>{email}</p>
+              </div>
+            )}
+
+            {showRoute && (
+              <div className="contact-info-item clickable" onClick={handleRoute}>
+                <span className="contact-icon">🗺️</span>
+                <strong>Route planen</strong>
+                <p>In Google Maps öffnen</p>
               </div>
             )}
           </div>
