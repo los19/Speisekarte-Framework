@@ -413,35 +413,10 @@
   opacity: 0.8;
 }
 
+/* Smartphones - improved scrolling for all mobile devices */
 @media (max-width: 768px) {
   .notes-panel {
     max-width: 100%;
-  }
-
-  .notes-header {
-    padding: 16px;
-  }
-
-  .notes-header h3 {
-    font-size: 18px;
-  }
-
-  .notes-content {
-    padding: 12px;
-  }
-
-  .notes-item {
-    padding: 12px;
-  }
-
-  .notes-total-price {
-    font-size: 22px;
-  }
-}
-
-/* Fix for very small devices like iPhone SE (375x667 or smaller) */
-@media (max-height: 700px) {
-  .notes-panel {
     display: flex;
     flex-direction: column;
     max-height: 100vh;
@@ -450,11 +425,11 @@
 
   .notes-header {
     flex-shrink: 0;
-    padding: 12px 16px;
+    padding: 14px 16px;
   }
 
   .notes-header h3 {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .notes-content {
@@ -462,13 +437,71 @@
     min-height: 0; /* Critical for flex scrolling */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding: 12px;
   }
 
   .notes-footer {
     flex-shrink: 0;
-    max-height: 45vh; /* Limit footer height on small screens */
+    max-height: 50vh; /* Limit footer height on mobile */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding: 14px;
+  }
+
+  .notes-item {
+    padding: 12px;
+  }
+
+  .notes-total {
+    margin-bottom: 12px;
+  }
+
+  .notes-total-price {
+    font-size: 22px;
+  }
+
+  .notes-disclaimer {
+    font-size: 11px;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+  }
+
+  .notes-contact-actions {
+    margin-bottom: 12px;
+  }
+
+  .notes-contact-btn {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .notes-action-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .notes-actions {
+    gap: 8px;
+  }
+
+  .notes-whatsapp-hint {
+    font-size: 10px;
+    margin-top: 10px;
+  }
+}
+
+/* Very small devices (iPhone SE, small Android phones) */
+@media (max-width: 768px) and (max-height: 700px) {
+  .notes-header {
+    padding: 12px 16px;
+  }
+
+  .notes-header h3 {
+    font-size: 16px;
+  }
+
+  .notes-footer {
+    max-height: 48vh;
     padding: 12px;
   }
 
@@ -483,11 +516,7 @@
 
   .notes-disclaimer {
     font-size: 10px;
-    padding: 8px 10px;
-    margin-bottom: 10px;
-  }
-
-  .notes-contact-actions {
+    padding: 6px 8px;
     margin-bottom: 10px;
   }
 
@@ -497,24 +526,15 @@
   }
 
   .notes-action-btn {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  .notes-actions {
-    gap: 8px;
-  }
-
-  .notes-whatsapp-hint {
-    font-size: 10px;
-    margin-top: 8px;
+    padding: 11px;
+    font-size: 13px;
   }
 }
 
-/* Even smaller devices (iPhone SE 1st gen, etc.) */
-@media (max-height: 580px) {
+/* Extra small devices (iPhone SE 1st gen, etc.) */
+@media (max-width: 768px) and (max-height: 580px) {
   .notes-footer {
-    max-height: 50vh;
+    max-height: 52vh;
   }
 
   .notes-header {
