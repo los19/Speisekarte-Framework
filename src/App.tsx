@@ -51,7 +51,25 @@ function AppRouter() {
 }
 
 function AppWithRouter() {
+  const { isLoading, error } = useConfig();
   const features = useFeatures();
+
+  if (isLoading) {
+    return (
+      <div className="app-loading">
+        <p>Wird geladen...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="app-error">
+        <h2>Fehler beim Laden</h2>
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   // If website mode is disabled, no router needed
   if (!features.enableWebsite) {
